@@ -1,0 +1,76 @@
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.model';
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-board-admin',
+  templateUrl: './board-admin.component.html',
+  styleUrls: ['./board-admin.component.css']
+})
+export class BoardAdminComponent implements OnInit {
+  users: User[] = []
+  content: string = ''
+  constructor(private usersService: UsersService) { }
+
+  ngOnInit(): void {
+    this.getAllUsers()
+  }
+  getAllUsers() {
+    this.usersService.getAllUsers().subscribe({
+      next: data => {
+        this.users = data;
+      },
+      error: err => {
+        if (err.error) {
+          try {
+            const res = JSON.parse(err.error);
+            this.content = res.message;
+          } catch {
+            this.content = `Error with status: ${err.status} - ${err.statusText}`;
+          }
+        } else {
+          this.content = `Error with status: ${err.status}`;
+        }
+      }
+    });
+  }
+  deleteUser(id: number) {
+    this.usersService.removById(id).subscribe({
+      next: data => {
+      },
+      error: err => {
+        if (err.error) {
+          try {
+            const res = JSON.parse(err.error);
+            this.content = res.message;
+          } catch {
+            this.content = `Error with status: ${err.status} - ${err.statusText}`;
+          }
+        } else {
+          this.content = `Error with status: ${err.status}`;
+        }
+      }
+    })
+    this.getAllUsers()
+
+  }
+  toggleRole(user: User) {
+    this.usersService.upDateRole(user.id, user.role == 'USER' ? 'ADMIN' : 'USER').subscribe({
+      next: data => {
+      },
+      error: err => {
+        if (err.error) {
+          try {
+            const res = JSON.parse(err.error);
+            this.content = res.message;
+          } catch {
+            this.content = `Error with status: ${err.status} - ${err.statusText}`;
+          }
+        } else {
+          this.content = `Error with status: ${err.status}`;
+        }
+      }
+    })
+    this.getAllUsers()
+  }
+}
