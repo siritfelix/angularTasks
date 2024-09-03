@@ -51,8 +51,19 @@ export class AddTaskComponent implements OnInit {
   onSubmit(): void {
     if (this.tareaForm.valid) {
       const nuevaTarea = this.tareaForm.value;
-      this.taskService.addTask(nuevaTarea)
-      this.router.navigate(['/tasks'])
+      this.taskService.addTask(nuevaTarea).subscribe({
+        next: data => { this.router.navigate(['/tasks']) },
+        error: err => {
+          if (err.error) {
+            try {
+              const res = JSON.parse(err.error);
+            } catch {
+            }
+          } else {
+          }
+        }
+      })
+
     } else {
       console.log('Formulario inválido');
     }

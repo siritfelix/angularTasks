@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Task } from '../tasks/task/task.model';
@@ -29,7 +29,10 @@ export class TaskService {
   }
 
   addTask(task: Task): Observable<any> {
-    return of(this.dataMock.addTask(task))
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(API_URL, JSON.stringify(task), { headers })
   }
   getAllTasksByFilter(prioridad?: String | null, completada?: Boolean | null): Observable<any> {
     var tasksFilter: Task[] = this.dataMock.getAllTasks()
