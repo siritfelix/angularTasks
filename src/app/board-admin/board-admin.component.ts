@@ -37,6 +37,7 @@ export class BoardAdminComponent implements OnInit {
   deleteUser(id: number) {
     this.usersService.removById(id).subscribe({
       next: data => {
+        this.getAllUsers()
       },
       error: err => {
         if (err.error) {
@@ -51,12 +52,11 @@ export class BoardAdminComponent implements OnInit {
         }
       }
     })
-    this.getAllUsers()
-
   }
   toggleRole(user: User) {
     this.usersService.upDateRole(user.id, user.role == 'USER' ? 'ADMIN' : 'USER').subscribe({
       next: data => {
+        this.getAllUsers()
       },
       error: err => {
         if (err.error) {
@@ -71,6 +71,5 @@ export class BoardAdminComponent implements OnInit {
         }
       }
     })
-    this.getAllUsers()
   }
 }
