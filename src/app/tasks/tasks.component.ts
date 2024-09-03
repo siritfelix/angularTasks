@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TaskService } from '../_services/task.service';
+import { EventBusService } from '../_shared/event-bus.service';
 import { Task } from './task/task.model';
 
 @Component({
@@ -17,11 +19,12 @@ export class TasksComponent implements OnInit {
 
   completadadOption: ('sin filtro' | 'false' | 'true')[] = ['sin filtro', 'false', 'true'];
   completada: 'sin filtro' | 'false' | 'true' = 'sin filtro';
-
+  eventBusSub?: Subscription;
   private taskService = inject(TaskService);
-  constructor(private router: Router) { }
+  constructor(private router: Router, private eventBusService: EventBusService) { }
   ngOnInit(): void {
     this.getAllTasks();
+
   }
   getAllTasks() {
     if (this.prioridad != 'sin filtro' || this.completada != 'sin filtro') {
@@ -33,9 +36,7 @@ export class TasksComponent implements OnInit {
             this.tasks = data;
           },
           error: err => {
-            if (err.status == '403') {
-              this.router.navigate(['/home'])
-            }
+            this.router.navigate(['/home'])
           }
         }
       );

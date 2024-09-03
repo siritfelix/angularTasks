@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { StorageService } from '../../_services/storage.service';
 import { TaskService } from '../../_services/task.service';
 
 @Component({
@@ -18,12 +19,17 @@ export class AddTaskComponent implements OnInit {
     asignadaA: new FormControl('')
   })
   private taskService = inject(TaskService);
-  constructor(private fb: FormBuilder, private router: Router) { }
+  isLoggedIn = false;
+  constructor(private fb: FormBuilder, private router: Router, private storageService: StorageService) { }
   getForm(): { [key: string]: AbstractControl } {
     return this.tareaForm.controls
   }
 
   ngOnInit(): void {
+
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    if (!this.isLoggedIn)
+      this.router.navigate(['/home'])
     this.tareaForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(100)]],
       completada: [false, Validators.required],
@@ -65,6 +71,7 @@ export class AddTaskComponent implements OnInit {
       })
 
     } else {
+      this.router.navigate(['/home'])
       console.log('Formulario inválido');
     }
   }

@@ -47,8 +47,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
           }),
           catchError((error) => {
             this.isRefreshing = false;
-
-            if (error.status == '403') {
+            if (error.status == '401' || error.status == '403') {
               this.eventBusService.emit(new EventData('logout', null));
             }
             return throwError(() => error);
@@ -56,7 +55,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         );
       }
     }
-
     return next.handle(request);
   }
 }
