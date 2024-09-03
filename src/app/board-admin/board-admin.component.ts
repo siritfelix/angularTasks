@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StorageService } from '../_services/storage.service';
 import { User } from './user.model';
 import { UsersService } from './users.service';
 
@@ -10,9 +12,14 @@ import { UsersService } from './users.service';
 export class BoardAdminComponent implements OnInit {
   users: User[] = []
   content: string = ''
-  constructor(private usersService: UsersService) { }
+  isLoggedIn = false;
+  constructor(private usersService: UsersService, private storageService: StorageService, private router: Router) { }
 
   ngOnInit(): void {
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/home'])
+    }
     this.getAllUsers()
   }
   getAllUsers() {
