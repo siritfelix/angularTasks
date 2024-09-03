@@ -46,6 +46,7 @@ export class TasksComponent implements OnInit {
   onUpdate(task: Task): void {
     this.taskService.updateTask(task).subscribe({
       next: data => {
+        this.getAllTasks()
       },
       error: err => {
         if (err.error) {
@@ -60,12 +61,12 @@ export class TasksComponent implements OnInit {
         }
       }
     })
-    this.getAllTasks()
   }
 
   onDeleteTask(id: number): void {
     this.taskService.deleteTask(id).subscribe({
       next: data => {
+        this.getAllTasks()
       },
       error: err => {
         if (err.error) {
@@ -80,11 +81,11 @@ export class TasksComponent implements OnInit {
         }
       }
     })
-    this.getAllTasks()
   }
   onCreate(task: Task) {
     this.taskService.addTask(task).subscribe({
       next: data => {
+        this.getAllTasks()
       },
       error: err => {
         if (err.error) {
@@ -99,7 +100,6 @@ export class TasksComponent implements OnInit {
         }
       }
     })
-    this.getAllTasks()
   }
 
 
@@ -108,6 +108,7 @@ export class TasksComponent implements OnInit {
       {
         next: data => {
           this.tasks = data;
+          this.getAllTasks()
         },
         error: err => {
           if (err.error) {
